@@ -1,0 +1,53 @@
+
+=== Resultados de las pruebas ===
+[OK]    U01  email_valido acepta un correo correcto
+[OK]    U02  email_valido rechaza un correo sin @
+[OK]    U03  email_valido rechaza cadena vacía
+[OK]    U04  email_valido rechaza más de 80 caracteres
+[OK]    U05  contrasena_valida acepta "Clave2026x"
+[OK]    U06  contrasena_valida rechaza menos de 8 caracteres
+[OK]    U07  contrasena_valida rechaza contraseña sin números
+[OK]    U08  contrasena_valida rechaza contraseña sin letras
+[OK]    U09  validar_registro: datos correctos no generan errores
+[OK]    U10  validar_registro: nombre vacío genera error
+[OK]    U11  validar_registro: nombre de 51 caracteres genera error
+[OK]    U12  validar_registro: contraseñas distintas generan error
+[OK]    U13  validar_registro: ciudad de 51 caracteres genera error
+[OK]    U14  e() escapa HTML para prevenir XSS
+[OK]    U15  largo() cuenta tildes y ñ como un carácter
+[OK]    U16  csrf_ok acepta el token correcto
+[OK]    U17  csrf_ok rechaza un token distinto
+[OK]    U18  csrf_ok rechaza token nulo
+[OK]    B01  Existen las 5 tablas del modelo
+[OK]    B02  Ningún usuario tiene la contraseña vacía
+[OK]    B03  Los 10 usuarios guardan un hash bcrypt verificable
+[OK]    B04  El correo es UNIQUE: no permite duplicados
+[OK]    B05  FK: un pedido no puede tener un usuario inexistente
+[OK]    B06  FK: un detalle no puede apuntar a un producto inexistente
+[OK]    B07  CHECK: el stock no puede ser negativo
+[OK]    B08  CHECK: la cantidad de un detalle debe ser mayor que 0
+[OK]    B09  NOT NULL: un pedido exige id_user
+[OK]    B10  ENUM: el rol solo admite cliente o administrador
+[OK]    B11  Integridad contable: total del pedido = suma de cantidad x precio_unitario
+[OK]    B12  No se puede borrar un producto que ya tiene pedidos (RESTRICT)
+[OK]    B13  Consulta de ventas por categoría suma $927.000 en total
+[OK]    B14  Hay 4 clientes en Cúcuta (40 % de los 10 usuarios)
+[OK]    A01  Login correcto del administrador devuelve rol administrador
+[OK]    A02  Login correcto de un cliente devuelve rol cliente
+[OK]    A03  Contraseña incorrecta: mensaje genérico
+[OK]    A04  Correo inexistente: el MISMO mensaje genérico (no revela si existe)
+[OK]    A05  Entrada vacía o con formato de correo inválido es rechazada
+[OK]    A06  Inyección SQL (' OR '1'='1) no autentica
+[OK]    A07  Cada fallo incrementa el contador de intentos
+[OK]    A08  Un login correcto reinicia el contador de intentos
+[OK]    A09  Tras 5 fallos la cuenta se bloquea
+[OK]    A10  Una cuenta bloqueada rechaza incluso la contraseña correcta
+[OK]    A11  Al vencer el bloqueo la cuenta vuelve a permitir el ingreso
+[OK]    A12  Una cuenta con contraseña vacía en la BD no entra con contraseña vacía
+[OK]    R01  Registro válido crea un usuario con rol cliente
+[OK]    R02  La contraseña se guarda cifrada (nunca en texto plano)
+[OK]    R03  El usuario recién registrado puede iniciar sesión
+[OK]    R04  Registro con correo duplicado es rechazado
+[OK]    R05  Registro con datos inválidos no inserta nada
+
+Total: 49 | Aprobadas: 49 | Falladas: 0 | Aprobación: 100 %
