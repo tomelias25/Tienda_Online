@@ -5,7 +5,6 @@ Plataforma web de comercio electrónico para **MiPymes de Cúcuta**, con base de
 - **Institución / semillero:** FESC – IDSE (Innovación en Desarrollo de Software Empresarial)
 - **Programa:** Ingeniería de Software · Tercer semestre
 - **Materias que integra:** Bases de Datos e Ingeniería de Software
-- **Empresa (formato PPA):** XXXXX *(se cambia en `config.php`, constante `NOMBRE_EMPRESA`)*
 - **ODS:** 4 (Educación de calidad), 8 (Trabajo decente y crecimiento económico), 9 (Industria, innovación e infraestructura)
 
 ## Equipo y roles Scrum
