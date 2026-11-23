@@ -2,13 +2,7 @@
 
 Preguntas que el docente puede hacer sobre lo que **cada integrante realizó**, con respuestas modelo basadas en este proyecto. Cada pregunta indica la materia a la que aplica: **[BD]** Bases de Datos, **[IS]** Ingeniería de Software.
 
-> Son **respuestas modelo**. Ajústelas a lo que el equipo realmente hizo, sobre todo las de Git, las retrospectivas y los impedimentos: deben coincidir con su experiencia y con el historial del repositorio.
->
-> Estudie las respuestas de su rol, pero entienda también las de los demás: en la sustentación pueden preguntar a cualquiera sobre cualquier parte.
-
----
-
-## Preguntas comunes (todos los roles)
+## Preguntas comunes
 
 **1. [IS] ¿Qué arquitectura usaron y por qué?**
 Arquitectura en capas sobre páginas PHP: presentación (`login.php`, `registro.php`, `panel.php`), negocio (`autenticacion.php`, `validaciones.php`), acceso a datos (`config.php` con PDO) y base de datos MariaDB. No es MVC completo; se eligió algo simple para el alcance del semestre, separando la lógica de las páginas para poder probarla. Ver `docs/ARQUITECTURA.md`.
