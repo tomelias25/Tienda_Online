@@ -1,24 +1,55 @@
 <?php
 require __DIR__ . '/config.php';
-require __DIR__ . '/autenticacion.php';
 
 if (!empty($_SESSION['id_user'])) { header('Location: panel.php'); exit; }
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim((string)($_POST['email'] ?? ''));
+    $pass  = (string)($_POST['password'] ?? '');
+    $msgGenerico = 'Correo o contraseña incorrectos.';
+
     if (!csrf_ok($_POST['csrf'] ?? null)) {
         $error = 'Sesión expirada. Recargue la página e intente de nuevo.';
+    } elseif ($email === '' || $pass === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Ingrese un correo válido y su contraseña.';
     } else {
-        $r = intentar_login(db(), (string)($_POST['email'] ?? ''), (string)($_POST['password'] ?? ''));
-        if ($r['ok']) {
-            session_regenerate_id(true);               // evita fijación de sesión
-            $_SESSION['id_user'] = $r['usuario']['id_user'];
-            $_SESSION['nombre']  = $r['usuario']['nombre'];
-            $_SESSION['rol']     = $r['usuario']['rol'];
+        $st = db()->prepare('SELECT id_user, nombre, email, password, rol, intentos_fallidos, bloqueado_hasta
+                             FROM usuarios WHERE email = ? LIMIT 1');
+        $st->execute([$email]);
+        $u = $st->fetch();
+
+        if ($u && $u['bloqueado_hasta'] && strtotime($u['bloqueado_hasta']) > time()) {
+            $min = (int)ceil((strtotime($u['bloqueado_hasta']) - time()) / 60);
+            $error = "Cuenta bloqueada temporalmente. Intente de nuevo en $min minuto(s).";
+        } elseif ($u && $u['password'] !== '' && password_verify($pass, $u['password'])) {
+            // éxito: reiniciar contador, renovar sesión y rehash si es necesario
+            if (password_needs_rehash($u['password'], PASSWORD_BCRYPT)) {
+                db()->prepare('UPDATE usuarios SET password=? WHERE id_user=?')
+                    ->execute([password_hash($pass, PASSWORD_BCRYPT), $u['id_user']]);
+            }
+            db()->prepare('UPDATE usuarios SET intentos_fallidos=0, bloqueado_hasta=NULL WHERE id_user=?')
+                ->execute([$u['id_user']]);
+            session_regenerate_id(true);
+            $_SESSION['id_user'] = (int)$u['id_user'];
+            $_SESSION['nombre']  = $u['nombre'];
+            $_SESSION['rol']     = $u['rol'];
             $_SESSION['csrf']    = bin2hex(random_bytes(32));
             header('Location: panel.php'); exit;
+        } else {
+            if ($u) {
+                $n = (int)$u['intentos_fallidos'] + 1;
+                if ($n >= MAX_INTENTOS) {
+                    db()->prepare('UPDATE usuarios SET intentos_fallidos=0, bloqueado_hasta=DATE_ADD(NOW(), INTERVAL ? MINUTE) WHERE id_user=?')
+                        ->execute([MINUTOS_BLOQUEO, $u['id_user']]);
+                } else {
+                    db()->prepare('UPDATE usuarios SET intentos_fallidos=? WHERE id_user=?')->execute([$n, $u['id_user']]);
+                }
+            } else {
+                password_verify($pass, '$2y$10$usesomesillystringforsaltoOtpRzKX1nQ7mL8vPq0yWcS2dT4eUa'); // tiempo constante
+            }
+            $error = $msgGenerico;
         }
-        $error = $r['mensaje'];
     }
 }
 cabecera('Iniciar sesión'); ?>

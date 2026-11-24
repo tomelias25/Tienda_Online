@@ -1,15 +1,12 @@
 <?php
-// config.php - configuración y funciones comunes
-// Nombre de la empresa definida en el formato oficial del PPA: cámbielo aquí.
-const NOMBRE_EMPRESA = 'XXXXX';
+const NOMBRE_EMPRESA = 'Tiendamalboro';
 
-// Datos de conexión (XAMPP por defecto: root sin contraseña)
 const DB_HOST = '127.0.0.1';
 const DB_NAME = 'tienda_online';
 const DB_USER = 'root';
 const DB_PASS = '';
 
-const MAX_INTENTOS   = 5;   // intentos fallidos antes de bloquear
+const MAX_INTENTOS   = 5;  
 const MINUTOS_BLOQUEO = 5;
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -31,6 +28,7 @@ function db(): PDO {
     return $pdo;
 }
 
+function largo(string $s): int { return function_exists('mb_strlen') ? mb_strlen($s, 'UTF-8') : strlen(utf8_decode($s)); }
 function e(?string $s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
 function csrf_token(): string {
